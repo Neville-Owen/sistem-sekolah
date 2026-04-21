@@ -8,15 +8,12 @@ use App\Models\Student;
 
 class StudentController extends Controller
 {
-
     public function index()
     {
         $studentModel = new Student();
         $students = $studentModel->getStudents();
 
-        $this->view('students.index' , [
-            'students' => $students
-        ]);
+        $this->view('students.index', ['students' => $students]);
     }
 
     public function create()
@@ -24,9 +21,16 @@ class StudentController extends Controller
         $this->view('students.create');
     }
 
+
     public function show(string $id)
     {
-        $this->view('students.show');
+        $id = intval($id);
+        $studentModel = new Student();
+        $student = $studentModel->getStudent($id);
+        $this->view('students.show',
+        [
+            'student' => $student
+        ]);
     }
 
     public function edit(string $id)
@@ -34,4 +38,9 @@ class StudentController extends Controller
         $this->view('students.edit');
     }
 
+    public function store()
+    {
+        $studentModel = new Student();
+        $studentModel->insert($_POST);
+    }
 }
