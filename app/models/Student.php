@@ -33,7 +33,7 @@ class Student extends Database
         $stmt->bind_param("i", $id);
         $stmt->execute();
         $result = $stmt->get_result();
-        return $result->fetch_assoc();
+        $result->fetch_assoc();
     }
 
         // Menambahkan data siswa baru
@@ -57,5 +57,45 @@ class Student extends Database
         }
 
         
+    }
+
+//Mengupdate data siswa
+    public function update(array $data, int $id)
+    {
+        $name = htmlspecialchars($data['name']);
+        $nis = htmlspecialchars($data['nis']);
+        $class = htmlspecialchars($data['class']);
+        $phoneNumber = htmlspecialchars($data['phone_number']);
+
+        $query = "UPDATE {$this->table} SET name = ? , nis = ?, class = ?, phone_number = ? WHERE id = ?";
+        $stmt = $this->connection->prepare($query);
+        $stmt->bind_param("ssssi", $name, $nis, $class, $phoneNumber, $id);
+        $stmt->execute();
+
+        if ($stmt->affected_rows > 0) {
+            header('Location: /students');
+            exit();
+        } else {
+            echo 'Error to store student data';
+        }
+
+        
+    }
+
+
+//Menghapus data siswa
+    public function delete(int $id)
+    {
+        $query = "DELETE FROM {$this->table} WHERE id = ?";
+        $stmt = $this->connection->prepare($query);
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+
+        if ($stmt->affected_rows > 0) {
+            header('Location: /students');
+            exit();
+        } else {
+            echo 'Error to store student data';
+        }
     }
 }
